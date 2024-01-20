@@ -40,3 +40,11 @@ type numberStringObject = {
 }
 
 type Map = []
+
+type Player={
+    health:number,
+    maxHealth:number,
+    block:number,
+    stamina:number,
+    statuses:{status:string,turns:number}[]
+}

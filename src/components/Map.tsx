@@ -7,13 +7,17 @@ interface MapProps {
     levels: MapNode[][],
     currentNode: MapNode,
     setCurretNode: React.Dispatch<React.SetStateAction<MapNode | undefined>>
+    setGameState: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Map: FC<MapProps> = ({ levels, currentNode, setCurretNode }) => {
+const Map: FC<MapProps> = ({ levels, currentNode, setCurretNode,setGameState }) => {
+
     async function handleClick(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         const clickedNode = currentNode.next.find((node)=>node.id===Number(e.currentTarget.id))
         await setCurretNode(clickedNode)
+        setGameState('event')
     }
+    
     return currentNode && <>
         <div className='relative w-2/5 h-full m-10 bg-slate-200'>
             {

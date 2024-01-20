@@ -5,6 +5,7 @@ interface IntroProps {
 }
 
 const Intro: FC<IntroProps> = ({ setGameState }) => {
+
     return (
         <>
             <img src="/mainChar.gif" alt="hero" className='absolute w-50 h-50 bottom-32 left-96' />
