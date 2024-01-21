@@ -44,7 +44,26 @@ type Map = []
 type Player={
     health:number,
     maxHealth:number,
+    outGoingDamageMultiplier:number,
+    outGoingFlatDamage:number,
+    incomingDamageMultiplier:number,
     block:number,
     stamina:number,
-    statuses:{status:string,turns:number}[]
+    statuses:{status:string,turns:number,effect:function}[]
+}
+
+type Mob={
+    health:number,
+    maxHealth:number,
+    outGoingDamageMultiplier:number,
+    outGoingFlatDamage:number,
+    incomingDamageMultiplier:number,
+    block:number,
+    statuses:{status:string,turns:number,effect:function}[],
+    moves:{name:string,effect:function,type:Movetypes}[]
+}
+
+enum Movetypes {
+    DAMAGE='DAMAGE',
+    STATUS='STATUS'
 }
