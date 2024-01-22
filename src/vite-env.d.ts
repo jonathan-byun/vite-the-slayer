@@ -4,11 +4,12 @@ enum DeckActions {
     ADD_CARD = 'ADD_CARD'
 }
 
-type DeckState=Card[]|null
+type DeckState = Card[] | null
 
-type Card ={
-    name:string,
-    effect:function
+type Card = {
+    name: string,
+    effect: function,
+    cost:number
 }
 
 type AddCardToDeckAction = {
@@ -19,12 +20,12 @@ type AddCardToDeckAction = {
 type DeckActionTypes = AddCardToDeckAction
 
 type MapNode = {
-    encounterType:EncounterTypes,
-    id:number,
-    level:number,
-    next:MapNode[],
-    position:number
-    
+    encounterType: EncounterTypes,
+    id: number,
+    level: number,
+    next: MapNode[],
+    position: number
+
 }
 
 enum EncounterTypes {
@@ -36,34 +37,47 @@ enum EncounterTypes {
 }
 
 type numberStringObject = {
-    [key:number]:string
+    [key: number]: string
 }
 
 type Map = []
 
-type Player={
-    health:number,
-    maxHealth:number,
-    outGoingDamageMultiplier:number,
-    outGoingFlatDamage:number,
-    incomingDamageMultiplier:number,
-    block:number,
-    stamina:number,
-    statuses:{status:string,turns:number,effect:function}[]
+type Status = {
+    name:string,
+    turns:typeof StatusNames
 }
 
-type Mob={
-    health:number,
-    maxHealth:number,
-    outGoingDamageMultiplier:number,
-    outGoingFlatDamage:number,
-    incomingDamageMultiplier:number,
-    block:number,
-    statuses:{status:string,turns:number,effect:function}[],
-    moves:{name:string,effect:function,type:Movetypes}[]
+
+
+type Player = {
+    health: number,
+    maxHealth: number,
+    outGoingDamageMultiplier: number,
+    outGoingFlatDamage: number,
+    incomingDamageMultiplier: number,
+    block: number,
+    stamina: number,
+    statuses: { name: string, turns: number, effect: function }[]
 }
 
-enum Movetypes {
-    DAMAGE='DAMAGE',
-    STATUS='STATUS'
+type Mob = {
+    health: number,
+    maxHealth: number,
+    outGoingDamageMultiplier: number,
+    outGoingFlatDamage: number,
+    incomingDamageMultiplier: number,
+    block: number,
+    statuses: { name: string, turns: number, effect: function }[],
+    moves: Moves[]
 }
+
+type Move = {
+    name: string,
+    effect: function
+}
+
+interface DamageMove extends Move {
+    type: typeof Movetype.DAMAGE
+}
+
+type Moves = DamageMove

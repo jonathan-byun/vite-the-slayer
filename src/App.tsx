@@ -6,11 +6,16 @@ import { DeckContext, DeckDispatchContext, PlayerContext } from './providers/Pro
 import { createMap, createMapNode } from './gamelogic/createMap'
 import Map from './components/map/Map'
 import Event from './gameStates/Event'
-import { vulnerable } from './gamelogic/statusEffects'
+import { applyVulnerable } from './gamelogic/statusEffects'
+import { StatusNames } from './enums/gameEnums'
+import { playerStartingCards } from './deck/cards'
+
+
+
 
 function App() {
   const [gameState, setGameState] = useState('event')
-  const initialDeckState: DeckState = []
+  const initialDeckState: DeckState = playerStartingCards
   const [deck, dispatchDeck] = useReducer(deckReducer, initialDeckState)
   const [map, setMap] = useState<MapNode[][]>()
   const [currentNode, setCurrentNode] = useState<MapNode>()
@@ -22,7 +27,7 @@ function App() {
     incomingDamageMultiplier: 1,
     outGoingDamageMultiplier: 1,
     outGoingFlatDamage: 0,
-    statuses: [{ status: 'vulnerable', turns: 1, effect:vulnerable}]
+    statuses: [{ name: StatusNames.VULNERABLE, turns: 1, effect:applyVulnerable}]
   })
 
   let currentPage;
@@ -55,8 +60,8 @@ function App() {
       <DeckContext.Provider value={deck}>
         <DeckDispatchContext.Provider value={dispatchDeck}>
           <PlayerContext.Provider value={{player,setPlayer}}>
-            <div className='relative w-full h-screen flex flex-col justify-center items-center'>
-              <img src="/background.png" alt="background" className='absolute object-fill w-full h-screen top-0 left-0 -z-10' />
+            <div className='relative flex flex-col justify-center items-center w-screen h-screen'>
+              <img src="/background.png" alt="background" className='absolute w-screen h-screen object-fill top-0 left-0 -z-10' />
               {currentPage}
             </div>
           </PlayerContext.Provider>
