@@ -9,7 +9,9 @@ type DeckState = Card[] | null
 type Card = {
     name: string,
     effect: function,
-    cost:number
+    cost:number,
+    description:string,
+    target:string
 }
 
 type AddCardToDeckAction = {
@@ -44,7 +46,8 @@ type Map = []
 
 type Status = {
     name:string,
-    turns:typeof StatusNames
+    turns:number,
+    effect:function,
 }
 
 

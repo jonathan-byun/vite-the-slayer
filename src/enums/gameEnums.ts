@@ -7,3 +7,8 @@ export const enum StatusNames{
     VULNERABLE='VULNERABLE'
 }
 
+export const enum TargetTypes{
+    ENEMY='ENEMY',
+    SELF='SELF',
+    ENEMYMULTIPLE='ENEMYMULTIPLE'
+}

@@ -1,5 +1,5 @@
 
-import { StatusNames } from "../enums/gameEnums";
+import { StatusNames, TargetTypes } from "../enums/gameEnums";
 import { applyBlock, applyStatus, applyVulnerable, dealDamage } from "../gamelogic/statusEffects";
 
 export const playerStartingCards: Card[] = [
@@ -7,7 +7,8 @@ export const playerStartingCards: Card[] = [
         name: 'Punch',
         effect: (mob: Mob) => dealDamage(mob, 7),
         cost: 1,
-        description:'Deal 7 Damage'
+        description:'Deal 7 Damage',
+        target:TargetTypes.ENEMY
     },
     {
         name: 'Shank',
@@ -19,12 +20,21 @@ export const playerStartingCards: Card[] = [
                 ), 3))
         },
         cost: 2,
-        description:'Deal 3 damage and apply 2 Vulnerable'
+        description:'Deal 3 damage and apply 2 Vulnerable',
+        target:TargetTypes.ENEMY
     },
     {
         name:'Defend',
         effect:(player:Player)=>applyBlock(player,5),
         cost:1,
-        description:'Gain 5 block'
-    }
+        description:'Gain 5 block',
+        target:TargetTypes.SELF
+    },
+    {
+        name: 'Punch',
+        effect: (mob: Mob) => dealDamage(mob, 7),
+        cost: 1,
+        description:'Deal 7 Damage',
+        target:TargetTypes.ENEMY
+    },
 ]

@@ -60,7 +60,7 @@ function App() {
       <DeckContext.Provider value={deck}>
         <DeckDispatchContext.Provider value={dispatchDeck}>
           <PlayerContext.Provider value={{player,setPlayer}}>
-            <div className='relative flex flex-col justify-center items-center w-screen h-screen'>
+            <div className='relative flex flex-col justify-center items-center w-screen h-screen overflow-hidden'>
               <img src="/background.png" alt="background" className='absolute w-screen h-screen object-fill top-0 left-0 -z-10' />
               {currentPage}
             </div>
