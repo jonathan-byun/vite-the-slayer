@@ -60,6 +60,7 @@ type Player = {
     incomingDamageMultiplier: number,
     block: number,
     stamina: number,
+    maxStamina:number,
     statuses: { name: string, turns: number, effect: function }[]
 }
 

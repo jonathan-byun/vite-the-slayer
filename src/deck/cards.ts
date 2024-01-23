@@ -13,11 +13,7 @@ export const playerStartingCards: Card[] = [
     {
         name: 'Shank',
         effect: (mob: Mob) => {
-            return (dealDamage
-                (applyStatus(
-                    { name: StatusNames.VULNERABLE, turns: 2, effect: applyVulnerable },
-                    mob
-                ), 3))
+            return (applyStatus({name:StatusNames.VULNERABLE,turns:2,effect:applyVulnerable},dealDamage(mob,3)))
         },
         cost: 2,
         description:'Deal 3 damage and apply 2 Vulnerable',

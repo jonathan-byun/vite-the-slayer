@@ -1,4 +1,5 @@
-import { dealDamage } from "../../gamelogic/statusEffects";
+import { MoveTypes, StatusNames } from "../../enums/gameEnums";
+import { applyStatus, applyVulnerable, dealDamage } from "../../gamelogic/statusEffects";
 
 export function determineMob(level: number) {
     return slime
@@ -13,6 +14,10 @@ export const slime: Mob = {
     block: 0,
     statuses: [],
     moves: [
-        { name: 'basic', effect: dealDamage, type: 'DAMAGE' }
+        // { name: 'Spit', effect: (player:Player)=>dealDamage(player,5), type: MoveTypes.DAMAGE },
+        {name:'Goop',effect:(player:Player)=>{
+            return applyStatus({name:StatusNames.VULNERABLE,turns:2,effect:applyVulnerable},dealDamage(player,5))
+        },
+    type:MoveTypes.COMBINATION}
     ]
 }

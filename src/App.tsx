@@ -9,6 +9,7 @@ import Event from './gameStates/Event'
 import { applyVulnerable } from './gamelogic/statusEffects'
 import { StatusNames } from './enums/gameEnums'
 import { playerStartingCards } from './deck/cards'
+import { Toaster } from 'react-hot-toast'
 
 
 
@@ -23,6 +24,7 @@ function App() {
     health: 40,
     maxHealth: 50,
     stamina: 3,
+    maxStamina:3,
     block: 0,
     incomingDamageMultiplier: 1,
     outGoingDamageMultiplier: 1,
@@ -60,6 +62,7 @@ function App() {
       <DeckContext.Provider value={deck}>
         <DeckDispatchContext.Provider value={dispatchDeck}>
           <PlayerContext.Provider value={{player,setPlayer}}>
+            <Toaster position='top-center' reverseOrder={false} />
             <div className='relative flex flex-col justify-center items-center w-screen h-screen overflow-hidden'>
               <img src="/background.png" alt="background" className='absolute w-screen h-screen object-fill top-0 left-0 -z-10' />
               {currentPage}

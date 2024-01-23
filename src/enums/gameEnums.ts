@@ -1,6 +1,7 @@
 export const enum MoveTypes {
     DAMAGE = 'DAMAGE',
-    STATUS = 'STATUS'
+    STATUS = 'STATUS',
+    COMBINATION='COMBINATION'
 }
 
 export const enum StatusNames{
@@ -10,5 +11,6 @@ export const enum StatusNames{
 export const enum TargetTypes{
     ENEMY='ENEMY',
     SELF='SELF',
-    ENEMYMULTIPLE='ENEMYMULTIPLE'
+    ENEMYMULTIPLE='ENEMYMULTIPLE',
+    NONE='NONE'
 }
