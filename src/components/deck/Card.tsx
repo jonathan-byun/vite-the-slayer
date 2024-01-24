@@ -14,7 +14,7 @@ const Card: FC<CardProps> = ({ card,}) => {
             </div>
 
             <div className='w-full h-[10rem] relative border-orange-800 border-2 overflow-hidden'>
-                <img src={`/cards/${card.name.toLowerCase()}.gif`} alt="" className='w-full h-full' />
+                <img src={`/cards/${card.name.toLowerCase()}.png`} alt="" className='w-full h-full' />
             </div>
 
             <div className='w-full h-[5rem] border-orange-800 border-2 overflow-y-auto p-3'>

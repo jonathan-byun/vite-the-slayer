@@ -9,9 +9,9 @@ type DeckState = Card[] | null
 type Card = {
     name: string,
     effect: function,
-    cost:number,
-    description:string,
-    target:string
+    cost: number,
+    description: string,
+    target: string
 }
 
 type AddCardToDeckAction = {
@@ -45,9 +45,9 @@ type numberStringObject = {
 type Map = []
 
 type Status = {
-    name:string,
-    turns:number,
-    effect:function,
+    name: string,
+    turns: number,
+    effect: function,
 }
 
 
@@ -60,7 +60,7 @@ type Player = {
     incomingDamageMultiplier: number,
     block: number,
     stamina: number,
-    maxStamina:number,
+    maxStamina: number,
     statuses: { name: string, turns: number, effect: function }[]
 }
 
@@ -72,16 +72,13 @@ type Mob = {
     incomingDamageMultiplier: number,
     block: number,
     statuses: { name: string, turns: number, effect: function }[],
-    moves: Moves[]
+    moves: Move[]
 }
 
 type Move = {
     name: string,
-    effect: function
+    effect: function,
+    type:string[],
+    damage:number,
+    animation:FunctionComponent
 }
-
-interface DamageMove extends Move {
-    type: typeof Movetype.DAMAGE
-}
-
-type Moves = DamageMove

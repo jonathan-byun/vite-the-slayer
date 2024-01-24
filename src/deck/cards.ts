@@ -5,15 +5,15 @@ import { applyBlock, applyStatus, applyVulnerable, dealDamage } from "../gamelog
 export const playerStartingCards: Card[] = [
     {
         name: 'Punch',
-        effect: (mob: Mob) => dealDamage(mob, 7),
+        effect: (mob: Mob,player:Player) => dealDamage(mob, player,7),
         cost: 1,
         description:'Deal 7 Damage',
         target:TargetTypes.ENEMY
     },
     {
         name: 'Shank',
-        effect: (mob: Mob) => {
-            return (applyStatus({name:StatusNames.VULNERABLE,turns:2,effect:applyVulnerable},dealDamage(mob,3)))
+        effect: (mob: Mob,player:Player) => {
+            return (applyStatus({name:StatusNames.VULNERABLE,turns:2,effect:applyVulnerable},dealDamage(mob,player,3)))
         },
         cost: 2,
         description:'Deal 3 damage and apply 2 Vulnerable',
@@ -28,7 +28,7 @@ export const playerStartingCards: Card[] = [
     },
     {
         name: 'Punch',
-        effect: (mob: Mob) => dealDamage(mob, 7),
+        effect: (mob: Mob,player:Player) => dealDamage(mob,player, 7),
         cost: 1,
         description:'Deal 7 Damage',
         target:TargetTypes.ENEMY

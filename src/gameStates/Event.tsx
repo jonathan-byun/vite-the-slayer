@@ -1,5 +1,4 @@
 import { FC, useContext } from 'react'
-import { PlayerContext } from '../providers/Providers'
 import MobEvent from '../components/mobs/MobEvent'
 
 interface EventProps {

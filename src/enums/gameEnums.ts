@@ -1,7 +1,6 @@
 export const enum MoveTypes {
     DAMAGE = 'DAMAGE',
     STATUS = 'STATUS',
-    COMBINATION='COMBINATION'
 }
 
 export const enum StatusNames{

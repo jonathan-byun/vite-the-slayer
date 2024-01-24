@@ -7,11 +7,21 @@ export function applyVulnerable(entity: Player | Mob) {
     }
 }
 
-export function dealDamage(entity: Player | Mob, damage: number) {
-    const finalDamage = Math.round(damage * entity.incomingDamageMultiplier)
+export function calculateDamage(base:number,receiving:Player|Mob,performing:Player|Mob) {
+    return(Math.round((base+performing.outGoingFlatDamage)*performing.outGoingDamageMultiplier*receiving.incomingDamageMultiplier))
+}
+
+export function dealDamage(receiving: Player | Mob,performing:Player|Mob, damage: number) {
+    const finalDamage = calculateDamage(damage,receiving,performing)
+    if (receiving.block > finalDamage) {
+        return {
+            ...receiving,
+            block: receiving.block - finalDamage
+        }
+    }
     return {
-        ...entity,
-        health: entity.health - finalDamage
+        ...receiving,
+        health: receiving.health - (finalDamage - receiving.block)
     }
 }
 
@@ -42,13 +52,13 @@ export function applyStatus(applyingStatus: Status, entity: Player | Mob) {
 }
 
 export function decrementStatuses(entity: Mob | Player) {
-    const updatedStatuses = entity.statuses.map((status) => {
-        if (status.turns > 1) {
-            return { ...status, turns: status.turns - 1 }
-        }
+    let updatedStatuses = entity.statuses.filter((status) => status.turns > 1)
+    updatedStatuses = updatedStatuses.map((status) => { return { ...status, turns: status.turns - 1 } })
+    const entityWithAppliedStatuses = updatedStatuses.reduce(
+        (currentEntity, status) => status?.effect(currentEntity),
+        entity)
+    return({
+        ...entityWithAppliedStatuses,
+        statuses: updatedStatuses
     })
-    return {
-        ...entity,
-        statuses:updatedStatuses
-    }
 }
