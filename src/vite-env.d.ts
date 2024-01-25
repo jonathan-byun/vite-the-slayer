@@ -8,10 +8,12 @@ type DeckState = Card[] | null
 
 type Card = {
     name: string,
-    effect: function,
+    effect: any,
     cost: number,
     description: string,
-    target: string
+    target: string,
+    rarity:string,
+    animation:FunctionComponent
 }
 
 type AddCardToDeckAction = {

@@ -1,16 +1,28 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useRef, } from 'react'
+import { CSSTransition } from 'react-transition-group'
+
 
 interface goopProps {
-  imageString: string
+  imageString: string,
+  start: boolean,
+  continueAfterAnimation:()=>void
 }
 
-const Straight: FC<goopProps> = ({ imageString }) => {
-  const [startAnimation, setStartAnimation] = useState(false)
-  useEffect(() => {
-    setStartAnimation(true)
-  }, [])
-  return <img src={`/mobs/moves/${imageString}.png`} alt=""
-    className={'w-20 h-20 absolute transition-all duration-1000 ' + (startAnimation ? 'right-2/3' : 'right:1/3')} />
+
+
+const Straight: FC<goopProps> = ({ imageString, start,continueAfterAnimation }) => {
+  const nodeRef = useRef(null)
+  return (
+    <CSSTransition nodeRef={nodeRef} in={start} timeout={1000}
+      classNames="straight-animation" unmountOnExit={true} exit={false} onEntered={()=>continueAfterAnimation()}>
+      <div ref={nodeRef}>
+        <img src={imageString} alt=""
+          className={'w-20 h-20'} />
+      </div>
+    </CSSTransition>
+
+
+  )
 }
 
 export default Straight

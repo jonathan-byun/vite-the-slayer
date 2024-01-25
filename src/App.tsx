@@ -8,7 +8,7 @@ import Map from './components/map/Map'
 import Event from './gameStates/Event'
 import { applyVulnerable } from './gamelogic/statusEffects'
 import { StatusNames } from './enums/gameEnums'
-import { playerStartingCards } from './deck/cards'
+import { playerStartingCards } from './lib/cards'
 import { Toaster } from 'react-hot-toast'
 
 

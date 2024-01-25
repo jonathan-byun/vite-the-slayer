@@ -13,3 +13,11 @@ export const enum TargetTypes{
     ENEMYMULTIPLE='ENEMYMULTIPLE',
     NONE='NONE'
 }
+
+export const enum CardRarities{
+    STARTING='STARTING',
+    COMMON='COMMON',
+    RARE='RARE',
+    UNIQUE='UNIQUE',
+    LEGENDARY='LEGENDARY'
+}

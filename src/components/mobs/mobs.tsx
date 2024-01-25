@@ -22,7 +22,7 @@ export const slime: Mob = {
             },
             type: [MoveTypes.DAMAGE],
             damage: 5,
-            animation: <Straight imageString='spit' />
+            animation:(start:boolean,continueAfterAnimation:()=>void)=> <Straight imageString='/mobs/moves/spit.png' start={start} continueAfterAnimation={continueAfterAnimation}/>
         },
         {
             name: 'Goop',
@@ -31,7 +31,7 @@ export const slime: Mob = {
             },
             type: [MoveTypes.DAMAGE, MoveTypes.STATUS],
             damage: 5,
-            animation: <Straight imageString="goop" />
+            animation:(start:boolean,continueAfterAnimation:()=>void)=> <Straight imageString="/mobs/moves/goop.png" start={start} continueAfterAnimation={continueAfterAnimation}/>
         }
     ]
 }

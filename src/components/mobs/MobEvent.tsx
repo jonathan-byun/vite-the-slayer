@@ -6,7 +6,6 @@ import { shuffleDeck } from '../../gamelogic/deckActions'
 import { MoveTypes, TargetTypes } from '../../enums/gameEnums'
 import toast from 'react-hot-toast'
 import { calculateDamage, decrementStatuses } from '../../gamelogic/statusEffects'
-import { DiVim } from 'react-icons/di'
 
 interface MobEventProps {
 
@@ -22,7 +21,10 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
     const [discard, setDiscard] = useState<Card[]>([])
     const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null)
     const [mobIntent, setMobIntent] = useState(0)
-    const [showMoveAnimation, setShowMoveAnimation] = useState(true)
+    const [showMoveAnimation, setShowMoveAnimation] = useState(false)
+    const [showCardAnimation, setShowCardAnimation] = useState(false)
+    const [showLocalDeck, setShowLocalDeck] = useState(false)
+    const [showDiscard, setShowDiscard] = useState(false)
     const player = playerContext!.player
     const targetable = selectedCardIndex != null ? hand![selectedCardIndex].target : TargetTypes.NONE
     useEffect(() => {
@@ -41,6 +43,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
             toast('not enough stamina')
             return
         }
+        setShowCardAnimation(true)
         const updatedTarget = card.effect(target, player)
         if (card.target === TargetTypes.ENEMY) {
             setMob(updatedTarget)
@@ -50,6 +53,13 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
             updatedTarget.stamina = updatedTarget.stamina - card.cost
             playerContext?.setPlayer(updatedTarget)
         }
+
+    }
+
+    function continueAfterCardAnimation() {
+        if (!hand || selectedCardIndex == null) return
+        console.log('hit')
+        setShowCardAnimation(false)
         setDiscard([...discard, hand.slice(selectedCardIndex)[0]])
         setHand(hand.filter((card, i) => i !== selectedCardIndex))
         setSelectedCardIndex(null)
@@ -66,6 +76,12 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
     function endTurn() {
         setPlayersTurn(false)
         setSelectedCardIndex(null)
+        setShowMoveAnimation(true)
+        toast(`Mob used ${mob.moves[mobIntent].name}`)
+    }
+
+    function continueEndTurnAfterAnimation() {
+        setShowMoveAnimation(false)
         playerContext?.setPlayer(decrementStatuses(resetPlayer(takeMobAction(player))) as Player)
         setMob(decrementStatuses(resetMob(mob)) as Mob)
     }
@@ -73,7 +89,6 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
     function takeMobAction(player: Player) {
         const randomMoveIndex = Math.floor(Math.random() * mob.moves.length)
         const queuedMove = mob.moves[mobIntent]
-        toast(`Mob used ${queuedMove.name}`)
         setMobIntent(randomMoveIndex)
         return (queuedMove.effect(player, mob))
     }
@@ -94,6 +109,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
             block: 0,
         }
     }
+
     return <>
         {player &&
             <div className='absolute left-96 bottom-40 max-w-96'>
@@ -121,13 +137,18 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
                 </button>
             </div>
         }
+        <div>
+            {mob.moves[mobIntent].animation(showMoveAnimation, continueEndTurnAfterAnimation)}
+        </div>
         {
-            (showMoveAnimation) &&
+            selectedCardIndex &&
             <div>
-              {mob.moves[mobIntent].animation}
+                {hand![selectedCardIndex].animation(showCardAnimation, continueAfterCardAnimation)}
             </div>
-            
         }
+
+
+
         {(mob && mob.health > 0) &&
             <div className='absolute right-96 bottom-40 max-w-96'>
                 <div className='flex flex-wrap gap-2'>
@@ -170,7 +191,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
                         : `${(i + 1) * (250 - hand.length)}px 250px`
                     ))
                     return (
-                        <button key={i} onClick={() => selectCard(i)}
+                        <button disabled={showCardAnimation} key={i} onClick={() => selectCard(i)}
                             className={'absolute left-0 transition-all duration-1000 border-2 '
                                 + ((i == selectedCardIndex) ? 'border-yellow-300' : 'border-transparent')
                             }
@@ -182,6 +203,46 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
 
             }
         </div>
+        <button onClick={() => setShowLocalDeck(true)} className='absolute left-0 bottom-0'>
+            <img src="/deck.gif" alt="" className='w-[15rem] h-[15rem] ' />
+        </button>
+        <button onClick={() => setShowDiscard(true)} className='absolute right-0 bottom-0'>
+            <img src="/discard.gif" alt="" className='w-[15rem] h-[15rem] ' />
+        </button>
+
+        {
+            (showLocalDeck || showDiscard) &&
+            <div onClick={() => { setShowLocalDeck(false); setShowDiscard(false) }} className='fixed w-screen h-screen bg-black bg-opacity-50 left-0 top-0 flex flex-col justify-center items-center z-10'>
+                <div className='bg-slate-300 w-3/5 h-4/5 z-20 overflow-auto'>
+                    {showLocalDeck &&
+                        <>
+                            <h2 className='text-5xl text-center sticky top-0 w-full bg-slate-300 z-30'>Draw Pile</h2>
+                            <div className=' flex flex-wrap gap-x-1 gap-y-5'>
+                                {localDeck?.map((card, i) => {
+                                    return (
+                                        <Card key={i} card={card} />
+                                    )
+                                })}
+                            </div>
+                        </>
+                    }
+                    {showDiscard &&
+                        <>
+                            <h2 className='text-5xl text-center sticky top-0 w-full bg-slate-700 z-30'>Discard Pile</h2>
+                            <div className=' flex flex-wrap gap-x-1 gap-y-5'>
+                                {discard?.map((card, i) => {
+                                    return (
+                                        <Card key={i} card={card} />
+                                    )
+                                })}
+                            </div>
+                        </>
+                    }
+
+                </div>
+            </div>
+        }
+
         <div className='absolute top-10 left-[45%]'>
             {playersTurn
                 ? <button onClick={() => endTurn()} className=' bg-green-700 w-24 h-24 rounded-full hover:bg-green-500'>END TURN</button>

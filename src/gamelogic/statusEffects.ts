@@ -28,7 +28,7 @@ export function dealDamage(receiving: Player | Mob,performing:Player|Mob, damage
 export function applyBlock(entity: Player | Mob, blockAmount: number) {
     return {
         ...entity,
-        block: blockAmount
+        block: entity.block+blockAmount
     }
 }
 

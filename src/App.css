@@ -2,3 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+.straight-animation-enter {
+    transform: translate(500px);
+}
+
+.straight-animation-enter-active {
+    transform: translate(-500px);
+    transition: transform 1000ms;
+}
+
+.straight-animation-exit {
+    transform: translate(0);
+}
+
+
+.straight-animation-exit-actives {
+    transform: translate(1000px);
+    transition: transform 1000ms;
+}
+
+.straight-card-animation-enter {
+    transform: translate(-500px);
+}
+
+.straight-card-animation-enter-active {
+    transform: translate(500px);
+    transition: transform 1000ms;
+}
+
+.straight-card-animation-exit {
+    transform: translate(0);
+}
+
+.straight-card-animation-exit-actives {
+    transform: translate(1000px);
+    transition: transform 1000ms;
+}
