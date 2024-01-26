@@ -21,3 +21,7 @@ export const enum CardRarities{
     UNIQUE='UNIQUE',
     LEGENDARY='LEGENDARY'
 }
+
+export const enum RewardTypes {
+    CARD='CARD'
+}

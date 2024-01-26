@@ -1,9 +1,11 @@
 
 import { CardRarities, StatusNames, TargetTypes } from "../enums/gameEnums";
 import { applyBlock, applyStatus, applyVulnerable, dealDamage } from "../gamelogic/statusEffects";
-import StraightCard from "./cardAnimations/straightCard";
+import CrossOutCard from "./cardAnimations/CrossOutCard";
+import ScaleCard from "./cardAnimations/ScaleCard";
+import StraightCard from "./cardAnimations/StraightCard";
 
-export const Cards = {
+export const cards = {
     punch: {
         name: 'Punch',
         effect: ((mob: Mob, player: Player) => { return (dealDamage(mob, player, 7) as Mob | Player) }),
@@ -21,7 +23,8 @@ export const Cards = {
         cost: 2,
         description: 'Deal 3 damage and apply 2 Vulnerable',
         target: TargetTypes.ENEMY,
-        rarity: CardRarities.STARTING
+        rarity: CardRarities.STARTING,
+        animation: (start: boolean, continueAfterAnimation: () => void) => <CrossOutCard imageString="/cards/shank.png" start={start} continueAfterAnimation={continueAfterAnimation} />
     },
     defend: {
         name: 'Defend',
@@ -29,7 +32,8 @@ export const Cards = {
         cost: 1,
         description: 'Gain 5 block',
         target: TargetTypes.SELF,
-        rarity: CardRarities.STARTING
+        rarity: CardRarities.STARTING,
+        animation: (start: boolean, continueAfterAnimation: () => void) => <ScaleCard imageString="/cards/defend.png" start={start} continueAfterAnimation={continueAfterAnimation} />
     },
 }
 
@@ -53,10 +57,24 @@ function getStartingCards() {
     let returnArray = []
     for (let i = 0; i < startingMakeup.length; i++) {
         for (let j = 0; j < startingMakeup[i].number; j++) {
-            returnArray.push((Cards[startingMakeup[i].name as keyof typeof Cards]))
+            returnArray.push((cards[startingMakeup[i].name as keyof typeof cards]))
         }
     }
     return returnArray
+}
+
+export function getCardsByRarity() {
+    const cardLibrary = {
+        common: [],
+        rare: [],
+        unique: [],
+        legendary: []
+    }
+    for (const cardKey in cards) {
+        const card = (cards[cardKey as keyof typeof cards])
+        console.log(cardLibrary, card.rarity)
+    }
+    console.log(cardLibrary)
 }
 
 

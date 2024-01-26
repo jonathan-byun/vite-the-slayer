@@ -6,3 +6,7 @@ export function shuffleDeck(deck:Card[]) {
         deck[randomPlacement]=holder
     }
 }
+
+export function getCardsBasedOnLevel(level:number) {
+    
+}

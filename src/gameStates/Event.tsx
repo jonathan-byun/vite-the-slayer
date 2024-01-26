@@ -2,15 +2,15 @@ import { FC, useContext } from 'react'
 import MobEvent from '../components/mobs/MobEvent'
 
 interface EventProps {
-  
+  currentNode: MapNode
 }
 
-const Event: FC<EventProps> = () => {
-  
+const Event: FC<EventProps> = ({ currentNode }) => {
+
 
 
   return <div>
-    <MobEvent />
+    <MobEvent level={currentNode.level} />
   </div>
 }
 

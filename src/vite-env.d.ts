@@ -63,6 +63,7 @@ type Player = {
     block: number,
     stamina: number,
     maxStamina: number,
+    drawPerTurn:number,
     statuses: { name: string, turns: number, effect: function }[]
 }
 

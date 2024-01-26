@@ -11,16 +11,6 @@
     transition: transform 1000ms;
 }
 
-.straight-animation-exit {
-    transform: translate(0);
-}
-
-
-.straight-animation-exit-actives {
-    transform: translate(1000px);
-    transition: transform 1000ms;
-}
-
 .straight-card-animation-enter {
     transform: translate(-500px);
 }
@@ -30,11 +20,20 @@
     transition: transform 1000ms;
 }
 
-.straight-card-animation-exit {
-    transform: translate(0);
+.scale-card-animation-enter {
+    transform: scale(.5) (0px, 100px);
 }
 
-.straight-card-animation-exit-actives {
-    transform: translate(1000px);
-    transition: transform 1000ms;
+.scale-card-animation-enter-active {
+    transform: scale(1.5) translate(100px, -100px);
+    transition: transform 1000ms
+}
+
+.crossout-card-animation-enter {
+    transform: translate(200px,-100px);
+}
+
+.crossout-card-animation-enter-active {
+    transform: translate(575px, 200px);
+    transition:transform 500ms ease-in-out
 }

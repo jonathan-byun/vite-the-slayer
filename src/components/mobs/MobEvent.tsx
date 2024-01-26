@@ -6,12 +6,13 @@ import { shuffleDeck } from '../../gamelogic/deckActions'
 import { MoveTypes, TargetTypes } from '../../enums/gameEnums'
 import toast from 'react-hot-toast'
 import { calculateDamage, decrementStatuses } from '../../gamelogic/statusEffects'
+import RewardScreen from '../RewardScreen'
 
 interface MobEventProps {
-
+level:number
 }
 
-const MobEvent: FC<MobEventProps> = ({ }) => {
+const MobEvent: FC<MobEventProps> = ({ level}) => {
     const playerContext = useContext(PlayerContext)
     const deck = useContext(DeckContext)
     const [mob, setMob] = useState<Mob>(slime)
@@ -25,16 +26,23 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
     const [showCardAnimation, setShowCardAnimation] = useState(false)
     const [showLocalDeck, setShowLocalDeck] = useState(false)
     const [showDiscard, setShowDiscard] = useState(false)
+    const [showRewards, setShowRewards] = useState(false)
     const player = playerContext!.player
     const targetable = selectedCardIndex != null ? hand![selectedCardIndex].target : TargetTypes.NONE
     useEffect(() => {
         setMob(determineMob(1))
         const nextDeck = [...deck!]
         shuffleDeck(nextDeck)
-        const nextHand = nextDeck.splice(0, 5)
+        const nextHand = nextDeck.splice(0, player.drawPerTurn)
         setHand(nextHand)
         setLocalDeck(nextDeck)
     }, [])
+
+    function endFight(win: boolean) {
+        if (win) {
+            setShowRewards(true)
+        }
+    }
 
     function playCardOnTarget(target: Mob | Player) {
         if (!hand || selectedCardIndex == null) return
@@ -57,12 +65,16 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
     }
 
     function continueAfterCardAnimation() {
+        console.log('continuing after animation')
         if (!hand || selectedCardIndex == null) return
-        console.log('hit')
         setShowCardAnimation(false)
-        setDiscard([...discard, hand.slice(selectedCardIndex)[0]])
-        setHand(hand.filter((card, i) => i !== selectedCardIndex))
+        const selectedIndex = selectedCardIndex
         setSelectedCardIndex(null)
+        setDiscard([...discard, hand.slice(selectedIndex)[0]])
+        setHand(hand.filter((card, i) => i !== selectedIndex))
+        if (mob.health < 1) {
+            endFight(true)
+        }
     }
 
     function selectCard(index: number) {
@@ -76,6 +88,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
     function endTurn() {
         setPlayersTurn(false)
         setSelectedCardIndex(null)
+        setDiscard(discard.concat(hand!))
         setShowMoveAnimation(true)
         toast(`Mob used ${mob.moves[mobIntent].name}`)
     }
@@ -84,6 +97,21 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
         setShowMoveAnimation(false)
         playerContext?.setPlayer(decrementStatuses(resetPlayer(takeMobAction(player))) as Player)
         setMob(decrementStatuses(resetMob(mob)) as Mob)
+        let remainingCards = localDeck?.length
+        let nextDeck;
+        let nextHand;
+        if (remainingCards != null && remainingCards < player.drawPerTurn) {
+            nextDeck = [...discard]
+            shuffleDeck(nextDeck)
+            nextHand = nextDeck.splice(0, player.drawPerTurn - remainingCards).concat(localDeck!)
+            setDiscard([])
+        } else {
+            nextDeck = [...localDeck!]
+            nextHand = nextDeck.splice(0, 5)
+        }
+        setHand(nextHand)
+        setLocalDeck(nextDeck)
+        setPlayersTurn(true)
     }
 
     function takeMobAction(player: Player) {
@@ -98,6 +126,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
             ...player,
             stamina: player.maxStamina,
             outGoingDamageMultiplier: 1,
+            incomingDamageMultiplier: 1,
             block: 0
         }
     }
@@ -132,7 +161,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
                     <div className={'bg-green-600 h-6 rounded '} style={{ width: `${player.health * 100 / player.maxHealth}%` }}>
                     </div>
                 </div>
-                <button onClick={() => playCardOnTarget(player)} disabled={targetable != TargetTypes.SELF} className={'border-2 ' + ((targetable === TargetTypes.SELF) ? 'border-green-400' : 'border-transparent')}>
+                <button onClick={() => playCardOnTarget(player)} disabled={(targetable != TargetTypes.SELF || showCardAnimation === true)} className={'border-2 ' + ((targetable === TargetTypes.SELF) ? 'border-green-400' : 'border-transparent')}>
                     <img src='/mainChar.gif' className='w-80 h-80' />
                 </button>
             </div>
@@ -177,7 +206,7 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
                         )
                     })}
                 </div>
-                <button onClick={() => playCardOnTarget(mob)} disabled={targetable != TargetTypes.ENEMY} className={'border-2 ' + (targetable == TargetTypes.ENEMY ? 'border-red-400' : 'border-transparent')}>
+                <button onClick={() => playCardOnTarget(mob)} disabled={(targetable != TargetTypes.ENEMY || showCardAnimation === true)} className={'border-2 ' + (targetable == TargetTypes.ENEMY ? 'border-red-400' : 'border-transparent')}>
                     <img src="/mobs/slime.gif" alt="" className='w-80 h-80' />
                 </button>
 
@@ -192,8 +221,9 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
                     ))
                     return (
                         <button disabled={showCardAnimation} key={i} onClick={() => selectCard(i)}
-                            className={'absolute left-0 transition-all duration-1000 border-2 '
-                                + ((i == selectedCardIndex) ? 'border-yellow-300' : 'border-transparent')
+                            className={'absolute left-0  border-2 '
+                                + ((i == selectedCardIndex) ? 'border-yellow-300 transition-all duration-1000 ' : 'border-transparent ')
+                                + ((i == selectedCardIndex && showCardAnimation === true) && ' translate-x-[52rem] translate-y-[17rem] scale-[.2] transition-transform duration-500')
                             }
                             style={{ zIndex: `${i + 1}`, translate: translateEffect }}>
                             <Card card={card} />
@@ -211,12 +241,12 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
         </button>
 
         {
-            (showLocalDeck || showDiscard) &&
+            (showLocalDeck || showDiscard || showRewards) &&
             <div onClick={() => { setShowLocalDeck(false); setShowDiscard(false) }} className='fixed w-screen h-screen bg-black bg-opacity-50 left-0 top-0 flex flex-col justify-center items-center z-10'>
-                <div className='bg-slate-300 w-3/5 h-4/5 z-20 overflow-auto'>
+                {(showLocalDeck || showDiscard) && <div className='bg-slate-300 w-3/5 h-4/5 z-20 overflow-auto'>
                     {showLocalDeck &&
                         <>
-                            <h2 className='text-5xl text-center sticky top-0 w-full bg-slate-300 z-30'>Draw Pile</h2>
+                            <h2 className={'text-5xl text-center sticky top-0 w-full bg-slate-300 z-30'}>Draw Pile</h2>
                             <div className=' flex flex-wrap gap-x-1 gap-y-5'>
                                 {localDeck?.map((card, i) => {
                                     return (
@@ -238,8 +268,11 @@ const MobEvent: FC<MobEventProps> = ({ }) => {
                             </div>
                         </>
                     }
-
-                </div>
+                </div>}
+                {
+                    showRewards &&
+                    <RewardScreen level={level}/>
+                }
             </div>
         }
 

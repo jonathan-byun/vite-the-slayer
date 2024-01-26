@@ -15,7 +15,7 @@ import { Toaster } from 'react-hot-toast'
 
 
 function App() {
-  const [gameState, setGameState] = useState('event')
+  const [gameState, setGameState] = useState('map')
   const initialDeckState: DeckState = playerStartingCards
   const [deck, dispatchDeck] = useReducer(deckReducer, initialDeckState)
   const [map, setMap] = useState<MapNode[][]>()
@@ -29,6 +29,7 @@ function App() {
     incomingDamageMultiplier: 1,
     outGoingDamageMultiplier: 1,
     outGoingFlatDamage: 0,
+    drawPerTurn:5,
     statuses: [{ name: StatusNames.VULNERABLE, turns: 1, effect:applyVulnerable}]
   })
 
@@ -41,7 +42,7 @@ function App() {
       if (currentNode) currentPage = <Map setGameState={setGameState} currentNode={currentNode} setCurretNode={setCurrentNode} levels={map ? map : [[]]} />
       break;
     case 'event':
-      currentPage = <Event />
+      currentPage = <Event currentNode={currentNode!}/>
   }
 
   useEffect(() => {
